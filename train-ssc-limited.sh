@@ -3,7 +3,7 @@
 python -m macgraph.train \
 	--dataset StationShortestCount \
 	--max-decode-iterations 1 \
-	--train-max-steps 8 \
+	--train-max-steps 10 \
 	--tag upto_1 \
 	--tag iter_1 \
 	--tag mp_vanilla \
@@ -15,4 +15,5 @@ python -m macgraph.train \
 	--eval-every 60 \
 	--mp-state-width 1 \
 	--disable-mp-gru \
+	--enable-summary-image \
 

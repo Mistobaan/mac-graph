@@ -64,7 +64,7 @@ def messaging_cell(context:CellContext):
 	# TODO: Stop hardcoding attn control indices :)
 
 	# Read/Write queries
-	in_write_query  	= tf.layers.dense(context.control_state[:,0,:], node_table_width) 
+	in_write_query  	= tf.layers.dense(context.in_question_tokens[:,10,:], node_table_width) 
 	# in_write_query      = tf.layers.dense(generate_query(context, "mp_write_query")[0], node_table_width)
 	# in_write_signal 	= layer_selu(in_signal, context.args["mp_state_width"])
 	in_write_signal 	= tf.ones([context.features["d_batch_size"], context.args["mp_state_width"]])

@@ -6,7 +6,7 @@ from ..args import ACTIVATION_FNS
 from ..util import *
 from ..layers import *
 
-def output_cell(args, features, in_question_state, in_memory_state, in_reads, in_control_state, in_mp_reads, in_iter_id):
+def output_cell(args, features, in_question_state, in_memory_state, in_reads, in_mp_reads, in_iter_id):
 
 	with tf.name_scope("output_cell"):
 
