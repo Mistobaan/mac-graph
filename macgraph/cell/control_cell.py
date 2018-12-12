@@ -18,15 +18,23 @@ def control_cell(args, features, in_iter_question_state, in_control_state, in_qu
 	"""
 	with tf.name_scope("control_cell"):
 
-		control_shape = [ features["d_batch_size"], args["control_width"] ]
+		control_shape = [ features["d_batch_size"], args["control_heads"], args["input_width"] ]
 		in_control_state = dynamic_assert_shape(in_control_state, control_shape)
-		
-		all_input = tf.concat([in_question_state, in_control_state, in_iter_question_state], -1, name="all_input")
+
+		control_state_wide = tf.reshape(in_control_state, [features["d_batch_size"], args["control_heads"] * args["input_width"] ])
+		a = [in_question_state, in_iter_question_state, control_state_wide]
+
+		# for i in range(args["control_heads"]):
+		# 	a.append(in_control_state[:,i,:])
+
+		all_input = tf.concat(a, -1, name="all_input")
 
 		question_token_width = args["input_width"]
 
 		attention_calls = []
 		queries = []
+
+		# TODO: Make each control head it's own RNN?
 
 		for i in range(args["control_heads"]):
 			question_token_query = tf.layers.dense(all_input, question_token_width)
@@ -46,20 +54,20 @@ def control_cell(args, features, in_iter_question_state, in_control_state, in_qu
 
 			attention_calls.append(a)
 
-		control_out  = [i[0] for i in attention_calls]
-		control_out  = tf.concat(control_out, -1)
-
+		control_out = [i[0] for i in attention_calls]
+		control_out = tf.stack(control_out, axis=1)
+		
 		taps = {}
 		for noun in ["attn", "attn_raw"]:
 			taps[noun] = [i[2][noun] for i in attention_calls]
 			taps[noun] = tf.concat(taps[noun], -1) # Concat the unitary score dimensions
 			taps[noun] = tf.transpose(taps[noun], [0, 2, 1]) # switch so last dimension is words
 
-		if control_out.shape[-1] != args["control_width"]:
-			tf.logging.warning("Resizing control signal to fit control_width")
-			control_out = tf.layers.dense(control_out, args["control_width"], name="resize_control_out")
+		# if control_out.shape[-1] != args["control_width"]:
+		# 	tf.logging.warning("Resizing control signal to fit control_width")
+		# 	control_out = tf.layers.dense(control_out, args["control_width"], name="resize_control_out")
 		
-		control_out = tf.nn.dropout(control_out, 1.0-args["control_dropout"])
+		# control_out = tf.nn.dropout(control_out, 1.0-args["control_dropout"])
 		control_out = dynamic_assert_shape(control_out, control_shape)
 
 		return control_out, taps
