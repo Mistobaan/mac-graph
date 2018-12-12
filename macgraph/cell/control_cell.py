@@ -11,7 +11,7 @@ def control_cell(args, features, in_iter_question_state, in_control_state, in_qu
 	Data in time-minor format
 
 	Arguments:
-		- in_control_state.shape   = [batch_size, control_width]
+		- in_control_state.shape   = [batch_size, control_heads, input_width]
 		- in_question_state.shape  = [batch_size, embed_width]
 		- in_question_tokens.shape = [batch_size, seq_len, embed_width]
 

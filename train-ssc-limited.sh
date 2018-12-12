@@ -13,4 +13,6 @@ python -m macgraph.train \
 	--disable-memory-cell \
 	--disable-read-cell \
 	--eval-every 60 \
+	--mp-state-width 1 \
+	--disable-mp-gru \
 
