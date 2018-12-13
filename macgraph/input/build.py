@@ -69,7 +69,7 @@ def build(args):
 
 	if not args["skip_vocab"]:
 		logger.info(f"Build vocab {args['vocab_path']} ")
-		vocab = Vocab.build(args, lambda i:gqa_to_tokens(args, i), limit=min(args["limit"], args["vocab_build_limit"]))
+		vocab = Vocab.build(args, lambda i:gqa_to_tokens(args, i), limit=min_none(args["limit"], args["vocab_build_limit"]))
 		logger.info(f"Wrote {len(vocab)} vocab entries")
 		logger.debug(f"vocab: {vocab.table}")
 		print()
