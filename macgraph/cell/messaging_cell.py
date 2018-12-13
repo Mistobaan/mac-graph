@@ -60,7 +60,7 @@ def messaging_cell(context:CellContext):
 	node_table, node_table_width, node_table_len = get_table_with_embedding(context.args, context.features, context.vocab_embedding, "kb_node")
 
 	in_signal = context.in_iter_id
-	control_state_wide = tf.reshape(context.control_state, [feature["d_batch_size"], -1] )
+	control_state_wide = tf.reshape(context.control_state, [context.features["d_batch_size"], context.args["input_width"] * context.args["control_heads"]] )
 
 	# TODO: Stop hardcoding attn control indices :)
 

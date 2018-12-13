@@ -110,17 +110,20 @@ def build(args):
 					pass
 
 
-			with tf.gfile.GFile(args["answer_classes_path"], "w") as file:
-				yaml.dump(dict(p.answer_classes), file)
 
-			with tf.gfile.GFile(args["answer_classes_types_path"], "w") as file:
-				yaml.dump(dict(p.answer_classes_types), file)
+		for mode, balancer in balancers.items():
+			logger.info(f"{mode}: Class distribution: {balancer.answer_classes}")
+			logger.info(f"{mode}: Wrote {balancer.written} TFRecords")
 
-			logger.info(f"Class distribution: {p.answer_classes}")
 
-			logger.info(f"Wrote {p.written} TFRecords")
+		# TODO: add train to filename
+		with tf.gfile.GFile(args["answer_classes_path"], "w") as file:
+			yaml.dump(dict(balancers["train"].answer_classes), file)
 
-		
+		with tf.gfile.GFile(args["answer_classes_types_path"], "w") as file:
+			yaml.dump(dict(balancers["train"].answer_classes_types), file)
+
+
 	with tf.gfile.GFile(args["question_types_path"], "w") as file:
 		yaml.dump(dict(question_types), file)
 

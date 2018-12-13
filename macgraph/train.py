@@ -44,9 +44,6 @@ def train(args):
 			experiment.add_tags(args["tag"])
 
 
-	train_size = sum(1 for _ in tf.python_io.tf_record_iterator(args["train_input_path"]))
-	logger.info(f"Training on {train_size} records")
-
 	# ----------------------------------------------------------------------------------
 
 	
@@ -71,6 +68,9 @@ def train(args):
 	else:
 		training_segments.append(TrainingSegment(args, args["train_max_steps"]*1000 if args["train_max_steps"] is not None else None))
 
+
+	train_size = sum(1 for _ in tf.python_io.tf_record_iterator(args["train_input_path"]))
+	tf.logging.info(f"Training on {train_size} records")
 
 	for i in training_segments:
 

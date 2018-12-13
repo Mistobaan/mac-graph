@@ -18,6 +18,9 @@ class Balancer(object):
 		self.name = name
 		self.parent = parent
 		self.running_total = None
+		self.answer_classes = Counter()
+		self.answer_classes_types = Counter()
+		self.written = 0
 
 	def oversampled_so_far(self):
 		raise NotImplementedException()
@@ -27,6 +30,12 @@ class Balancer(object):
 		raise NotImplementedException()
 
 	def write(self, doc, item):
+
+		key = (str(doc["answer"]), doc["question"]["type_string"])
+		self.answer_classes[str(doc["answer"])] += 1
+		self.answer_classes_types[key] += 1
+		self.written += 1
+
 		# Only do this for top level class
 		if self.parent is None:
 			self.batch_i += 1
